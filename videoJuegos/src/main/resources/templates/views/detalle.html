@@ -33,9 +33,26 @@
                 </div>
                 <div class="col-8">
                     <div class="card">
-                       <p th:text="*{titulo}"></p>
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="*{titulo}">Card title</h5>
+                            <p class="card-text">Precio : <span th:text="*{precio}">1</span> </p>
+                            <p class="card-text" th:if="*{stock}">
+                                cantidad:<span th:text="*{stock}"></span>
+                            </p>
+                            <p class="card-text" th:unless="*{stock}">
+                                cantidad:<span th:text="*{stock}"></span>
+                                    <span class="text-danger">No hay stock</span>
+                            </p>
+                        </div>
+                        <hr>
+                            <div class="card-body">
+                                <p class="card-text" th:text="*{descripcion}"></p>
+                            </div>
                     </div>
                 </div>
+               <div class="col-12 mt-5">
+                   <a th:href="@{/inicio}" class="btn btn-outline-dark">volver</a>
+               </div>
             </div>
     </div>
 </body>
