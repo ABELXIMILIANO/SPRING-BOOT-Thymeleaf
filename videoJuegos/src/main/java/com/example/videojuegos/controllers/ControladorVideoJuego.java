@@ -52,5 +52,21 @@ public class ControladorVideoJuego {
             model.addAttribute("error", e.getMessage());
             return "error";
         }
+
     }
+
+   @GetMapping("/crud")
+    public String crudVideoJuego(Model model){
+        try {
+            List<Videojuego> videojuegos= this.servcioVideoJuego.findAll();
+            model.addAttribute("videojuegos", videojuegos);
+            return "views/crud";
+        }catch(Exception e){
+            model.addAttribute("error",e.getMessage());
+            return "error";
+        }
+    }
+
+
+
 }
