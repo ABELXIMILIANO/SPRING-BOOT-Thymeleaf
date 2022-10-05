@@ -1,13 +1,14 @@
 package com.example.videojuegos.controllers;
 
 import com.example.videojuegos.entities.Videojuego;
+import com.example.videojuegos.services.ServicioCategoria;
+import com.example.videojuegos.services.ServicioEstudio;
 import com.example.videojuegos.services.ServicioVideoJuego;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,6 +17,10 @@ public class ControladorVideoJuego {
 
     @Autowired
     private ServicioVideoJuego servcioVideoJuego;
+    @Autowired
+    private ServicioCategoria servicioCategoria;
+    @Autowired
+    private ServicioEstudio servicioEstudio;
 
     @GetMapping("/inicio")
     public String inicio(Model model){
@@ -66,6 +71,40 @@ public class ControladorVideoJuego {
             return "error";
         }
     }
+    @GetMapping("/formulario/videojuego/{id}")
+    public String formularioVideojuego(Model model, @PathVariable("id")long id){
+        try{
+            model.addAttribute("categorias",this.servicioCategoria.findAll());
+            model.addAttribute("estudios",this.servicioEstudio.findAll());
+            if (id==0){
+                model.addAttribute("videojuego",new Videojuego());
+            }else{
+                model.addAttribute("videojuego",this.servcioVideoJuego.findById(id));
+            }
+            return "views/formulario/videojuego";
+
+        }catch (Exception e){
+            model.addAttribute("error",e.getMessage());
+            return "error";
+        }
+    }
+    @PostMapping("/formulario/videojuego/{id}")
+    public String guardarVideojuego(@ModelAttribute("videojuego")Videojuego videojuego, Model model, @PathVariable("id")long id){
+        try{
+            if (id==0){
+                this.servcioVideoJuego.saveOne(videojuego);
+            }else{
+                this.servcioVideoJuego.updateOne(videojuego,id);
+            }
+            return "redirect:/crud";
+
+        }catch (Exception e){
+            model.addAttribute("error",e.getMessage());
+            return "error";
+        }
+    }
+
+
 
 
 

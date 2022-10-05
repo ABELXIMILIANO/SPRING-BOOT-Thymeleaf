@@ -21,7 +21,7 @@ public class Categoria {
     private long id;
 
     private String nombre;
-    private boolean activo;
+    private boolean activo=true;
 
     @OneToMany(mappedBy = "categoria")
     private List<Videojuego> videojuegos;

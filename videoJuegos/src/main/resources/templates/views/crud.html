@@ -8,12 +8,12 @@
 <body>
 <nav th:replace="components/navbar :: nav_bar" ></nav>
 <div class ="container">
-  <<div class="row">
-    <div class="col-3">
+  <div class="row">
+    <div class="col-md-3">
       <h4>CRUD Videojuego</h4>
     </div>
     <div class="col-9 d-flex flex-row-reverse">
-      <a th:href="@{formulario/videojuego/0}"  class="btn btn-succes">Agregar Videojuego</a>
+      <a th:href="@{formulario/videojuego/0}"  class="btn btn-success">Agregar Videojuego</a>
     </div>
   </div>
   <div class = "row">
@@ -22,10 +22,10 @@
         <thead>
         <tr>
           <th scope="col"ID>#</th>
-          <th scope="col" Titulo>First</th>
-          <th scope="col" Precio>Last</th>
-          <th scope="col" Stock>Handle</th>
-          <th scope="col" Acciones>Handle</th>
+          <th scope="col" Titulo> Titulo</th>
+          <th scope="col" Precio>Precio</th>
+          <th scope="col" Stock>Stock</th>
+          <th scope="col" Acciones>Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -35,8 +35,8 @@
           <td th:text="${videojuego.precio}"></td>
           <td th:text="${videojuego.stock}"></td>
           <td>
-            <a href="@{formulario/videojuego/{id}(id=${videojuego.id)}" class="btn btn-warning">Editar</a>
-            <a href="@{eliminar/videojuego/{id}(id=${videojuego.id)}" class="btn btn-danger">Eliminar</a>
+            <a th:href="@{/formulario/videojuego/{id}(id=${videojuego.id})}" class="btn btn-warning">Editar</a>
+            <a th:if="${videojuego.activo}" th:href="@{/eliminar/videojuego/{id}(id=${videojuego.id})}" class="btn btn-danger">Eliminar</a>
         </tbody>
       </table>
     </div>
