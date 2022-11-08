@@ -10,7 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+
+import static java.util.Calendar.*;
 
 @Controller
 public class ControladorVideoJuego {
@@ -89,12 +94,29 @@ public class ControladorVideoJuego {
         }
     }
     @PostMapping("/formulario/videojuego/{id}")
-    public String guardarVideojuego(@ModelAttribute("videojuego")Videojuego videojuego, Model model, @PathVariable("id")long id){
+    public String guardarVideojuego(@ModelAttribute("videojuego")Videojuego videojuego,
+                                    @RequestParam("archivo") MultipartFile archivo,
+                                    Model model,
+                                    @PathVariable("id")long id){
         try{
+            String ruta = "C://videojuegos/imagenes";
+            int index =archivo.getOriginalFilename().indexOf(".");
+            String extension="";
+            extension="."+archivo.getOriginalFilename().substring(index+1);
+            String nombreFoto= getInstance().getTimeInMillis()+extension;
+            Path rutaAbsoluta=id !=0 ? Paths.get(ruta+"//"+videojuego.getImagen()):
+                    Paths.get(ruta+"//"+nombreFoto);
+
             if (id==0){
+                Files.write(rutaAbsoluta,archivo.getBytes());
+                videojuego.setImagen(nombreFoto);
                 this.servcioVideoJuego.saveOne(videojuego);
             }else{
-                this.servcioVideoJuego.updateOne(videojuego,id);
+                if(!archivo.isEmpty()){
+                    Files.write(rutaAbsoluta,archivo.getBytes());
+                    this.servcioVideoJuego.updateOne(videojuego,id);
+                }
+
             }
             return "redirect:/crud";
 
@@ -103,6 +125,32 @@ public class ControladorVideoJuego {
             return "error";
         }
     }
+
+    @GetMapping("/eliminar/videojuego/{id}")
+    public String eliminarVideojuego(Model model, @PathVariable("id")long id){
+
+        try{
+            model.addAttribute("videojuego",this.servcioVideoJuego.findById(id));
+            return "views/formulario/eliminar";
+        }catch (Exception e){
+            model.addAttribute("error",e.getMessage());
+            return "error";
+        }
+    }
+
+    @PostMapping("/eliminar/videojuego/{id}")
+    public String desactivarVideojuego(Model model, @PathVariable("id")long id){
+
+        try{
+            this.servcioVideoJuego.deleteById(id);
+            return "redirect:/crud";
+        }catch (Exception e){
+            model.addAttribute("error",e.getMessage());
+            return "error";
+        }
+    }
+
+
 
 
 

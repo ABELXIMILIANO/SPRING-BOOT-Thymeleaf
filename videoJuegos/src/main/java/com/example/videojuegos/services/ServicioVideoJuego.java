@@ -65,12 +65,20 @@ public class ServicioVideoJuego implements ServiceBase<Videojuego> {
     @Transactional
     public boolean deleteById(long id) throws Exception {
         try {
-            this.repositorioVideoJuego.deleteById(id);
-             return true;
+            Optional<Videojuego> opt = this.repositorioVideoJuego.findById(id);
+            if (!opt.isEmpty()) {
+                Videojuego videojuego = opt.get();
+                videojuego.setActivo(!videojuego.isActivo());
+                this.repositorioVideoJuego.save(videojuego);
+            } else {
+                throw new Exception();
+            }
+            return true;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
+
     @Transactional
     public List<Videojuego> findAllByActivo() throws Exception{
         try {
